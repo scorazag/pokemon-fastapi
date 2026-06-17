@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Poke FastAPI Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        .grid-pokes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .poke-card {
+            text-align: center;
+            padding: 15px;
+            text-transform: capitalize;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body class="container">
+    <header class="nav-header">
+        <div>
+            <h1>Catch 'Em All con FastAPI</h1>
+            <p>Busca un Pokémon por su nombre.</p>
+        </div>
+        <div>
+            <a href="/logout" class="outline" role="button">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <form action="/fetch-pokemon/" method="post">
+                <label for="pokemon_name">Nombre del Pokémon:</label>
+                <input type="text" id="pokemon_name" name="pokemon_name" placeholder="ej. mewtwo, gengar..." required>
+                <button type="submit">Guardar en Base de Datos</button>
+            </form>
+
+            {% if error %}
+            <div
+                style="background-color: #ffdddd; color: #990000; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                ⚠️ {{ error }}
+            </div>
+            {% endif %}
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Mis Pokémon Atrapados (En MySQL)</h2>
+            {% if pokemons %}
+            <div class="grid-pokes">
+                {% for poke in pokemons %}
+                <article class="poke-card">
+                    <img src="{{ poke.sprite }}" alt="{{ poke.name }}">
+                    <h3>{{ poke.name }}</h3>
+                    <p><kbd>{{ poke.type }}</kbd></p>
+                    <small>ID: {{ poke.id }}</small>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No hay pokémons en la base de datos todavía.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+
+</html>
